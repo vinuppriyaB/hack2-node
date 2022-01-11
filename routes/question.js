@@ -3,7 +3,10 @@ import {
     checkQuestionIsAvailable,
     insertQuestion,
     pushAnswer,
-    getAnswer
+    getAnswer,
+    inserdata,
+    getAllAvailableQuestion,
+    
    } 
    from "../helper.js";
  
@@ -12,12 +15,12 @@ import {
 
 
   router.post("/postquestion", async (request, response) => {
-    let filter =request.body;
+    let {title} =request.body;
     
-    const result = await checkQuestionIsAvailable(filter);
+    const result = await checkQuestionIsAvailable(title);
     if(result==null)
     {
-        const result1=await insertQuestion(filter);
+        const result1=await insertQuestion(request.body);
         response.send(result1);
     }
     else{
@@ -40,7 +43,8 @@ import {
         }
         
           
-          });      
+          }); 
+
   router.post("/addanswer", async (request, response) => {
         
         
@@ -48,12 +52,33 @@ import {
       response.send(result);
           
   });
+
   router.get("/getanswer", async (request, response) => {
         
     let filter =request.query;  
     const result=await getAnswer(filter);
-    response.send(result);
+    if(result){
+      response.status(200).send(result);
+
+    }else{
+      response.status(400).send({mgs:"no data"});
+    }
+    
         
+});
+router.get("/getavailquestion", async (request, response) => {
+        
+  let filter=request.query;
+  const result=await getAllAvailableQuestion(filter);
+  response.send(result);
+      
+});
+router.post("/insertdata", async (request, response) => {
+        
+        
+  const result=await inserdata(request.body);
+  response.send(result);
+      
 });
   
   

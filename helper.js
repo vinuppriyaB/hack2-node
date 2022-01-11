@@ -29,22 +29,58 @@ async function checkAvailUser(username){
     return user;
 
 }
-async function checkQuestionIsAvailable(filter){
+async function checkQuestionIsAvailable(title){
     const check = await client
         .db("B27rwd")
-        .collection("question")
-        .findOne(filter);
+        .collection("stackclone")
+        .findOne({title:title});
     
     return check;
 
 }
-async function insertQuestion(filter){
+async function insertQuestion(){
    
-    const {content}=filter;
+    // const {content}=filter;
+    let date =new Date();
+    let year=date.getFullYear();
+    let month=date.getMonth()+1;
+    let day=date.getDate();
+    console.log(year,month,day);
+let data=[
+    {
+        "title":"How to fix missing dependency warning when using useEffect React Hook",
+        "body":"./src/components/BusinessesList. Line 51:  React Hook useEffect has a missing dependency: 'fetchBusinesses'.Either include it or remove the dependency array  react-hooks/exhaustive-deps",
+        "tags":["reactjs","react-hook","create-react-app"],
+        "askBy":"Zoe",
+        "date": `${year}-${month}-${day}`,
+        "answerDetail":[
+            {
+                "user":"Joe",
+                "solution":"If you aren't using method anywhere apart from the effect,you could simply move it into the effect and avoid the warning",
+                "point":"25"
+            },
+            {
+                "user":"John",
+                "solution":"Declare function inside useEffect()",
+                "point":"34"
+            },
+            {
+                "user":"shiva",
+                "solution":"These warnings are very helpful for finding components that do not update consistently: Is it safe to omit functions from the list of dependencies?.However,if you want to remove the warnings throughout your project, you can add this to your ESLint configuration:",
+                "point":"7"
+            },
+            {
+                "user":"Jenny",
+                "solution":"This article is a good primer on fetching data with hooks: https://www.robinwieruch.de/react-hooks-fetch-data/ Essentially, include the fetch function definition inside useEffect:",
+                "point":"23"
+            }
+        ]
+    }
+]
     const ques = await client
         .db("B27rwd")
-        .collection("question")
-        .insertMany([{content:content,answer:[]}]);
+        .collection("stackclone")
+        .insertMany(data);
     
     return ques;
 
@@ -63,13 +99,32 @@ async function pushAnswer(request){
 async function getAnswer(filter){
     const ques = await client
         .db("B27rwd")
-        .collection("question")
+        .collection("stackclone")
         .findOne(filter);
     
     return ques;
 
 }
+async function inserdata(request){
+    // const ques=request;
+    console.log(request)
+    const ques = await client
+        .db("B27rwd")
+        .collection("question")
+        .insertMany([request]);
+    
+    return ques;
 
+}
+async function getAllAvailableQuestion(filter){
+    const ques = await client
+    .db("B27rwd")
+    .collection("stackclone")
+    .find(filter).toArray();
+   
+
+return ques;
+}
 export{
     genPassword,
     createUser,
@@ -77,6 +132,8 @@ export{
     checkQuestionIsAvailable,
     insertQuestion,
     pushAnswer,
-    getAnswer
+    getAnswer,
+    inserdata,
+    getAllAvailableQuestion,
 
 };
