@@ -38,45 +38,24 @@ async function checkQuestionIsAvailable(title){
     return check;
 
 }
-async function insertQuestion(){
-   
+async function insertQuestion(question){
+   console.log(question)
     // const {content}=filter;
     let date =new Date();
     let year=date.getFullYear();
     let month=date.getMonth()+1;
     let day=date.getDate();
     console.log(year,month,day);
-let data=[
-    {
-        "title":"How to fix missing dependency warning when using useEffect React Hook",
-        "body":"./src/components/BusinessesList. Line 51:  React Hook useEffect has a missing dependency: 'fetchBusinesses'.Either include it or remove the dependency array  react-hooks/exhaustive-deps",
-        "tags":["reactjs","react-hook","create-react-app"],
-        "askBy":"Zoe",
-        "date": `${year}-${month}-${day}`,
-        "answerDetail":[
-            {
-                "user":"Joe",
-                "solution":"If you aren't using method anywhere apart from the effect,you could simply move it into the effect and avoid the warning",
-                "point":"25"
-            },
-            {
-                "user":"John",
-                "solution":"Declare function inside useEffect()",
-                "point":"34"
-            },
-            {
-                "user":"shiva",
-                "solution":"These warnings are very helpful for finding components that do not update consistently: Is it safe to omit functions from the list of dependencies?.However,if you want to remove the warnings throughout your project, you can add this to your ESLint configuration:",
-                "point":"7"
-            },
-            {
-                "user":"Jenny",
-                "solution":"This article is a good primer on fetching data with hooks: https://www.robinwieruch.de/react-hooks-fetch-data/ Essentially, include the fetch function definition inside useEffect:",
-                "point":"23"
-            }
-        ]
-    }
-]
+const data=[{
+    title:question.title,
+    body:question.body,
+    tags:question.tags,
+    askBy:question.askby,
+    date:`${year} ${month} ${day}`,
+    answerDetail:[]
+    
+}]
+console.log(data)
     const ques = await client
         .db("B27rwd")
         .collection("stackclone")
@@ -87,14 +66,16 @@ let data=[
 }
 async function pushAnswer(request){
     
-    let {username,comment,content} =request.body;
-    let value={username:username,comment:comment}
-    const result2 = await client.db("B27rwd")
-    .collection("question")
-    .updateOne({ content: content },
-      { $push: { answer: value } });
-     
-  return result2;
+    let {username,comment,content} =request;
+    let value={username:username,comment:comment,point:0}
+    const result2 = await client
+        .db("B27rwd")
+        .collection("stackclone")
+        .findOneAndUpdate({ title: content },
+            { $push: { answerDetail: {user:username,solution:comment,point:0} } });
+
+   
+   return result2;
 }
 async function getAnswer(filter){
     const ques = await client

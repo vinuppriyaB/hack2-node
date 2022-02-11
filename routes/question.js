@@ -13,19 +13,13 @@ import {
   
   const router= express.Router();
 
-
+  
   router.post("/postquestion", async (request, response) => {
     let {title} =request.body;
     
-    const result = await checkQuestionIsAvailable(title);
-    if(result==null)
-    {
-        const result1=await insertQuestion(request.body);
-        response.send(result1);
-    }
-    else{
-       response.send(result);
-    }
+      const result1=await insertQuestion(request.body);
+      response.send(result1);
+
     
       
       });  
@@ -47,8 +41,8 @@ import {
 
   router.post("/addanswer", async (request, response) => {
         
-        
-      const result=await pushAnswer(request);
+    console.log(request.body) 
+      const result=await pushAnswer(request.body);
       response.send(result);
           
   });

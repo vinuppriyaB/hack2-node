@@ -43,12 +43,8 @@ router
    
   })
 
+
   router.route("/login").post( async(request, response) => {
-     
-      
-        
-
-
     const {username,password}=request.body;
     
     const userFromDB= await checkAvailUser(username);
@@ -62,10 +58,10 @@ router
     const isPasswordMatch= await bcrypt.compare(password,storedDbPassword)
     if(isPasswordMatch){
       const token=jwt.sign({id:userFromDB._id},process.env.SECRET_KEY)
-      response.send({message:"successful login",token:token});
+      response.send({message:"successful login",token:token,username:username});
     }
     else{
-      response.status(401).send({message:"invalide credential"});
+      response.status(401).send({message:"password doesnt match"});
     }
     
   
