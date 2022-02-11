@@ -10,22 +10,22 @@ async function genPassword(password)
   const hashedPassword= await bcrypt.hash(password,salt);
     return hashedPassword;
 }
-async function createUser(username,password) {
+async function createUser(username,password,email) {
    
 //    console.log(username,password)
     const user = await client
         .db("B27rwd")
         .collection("login")
-        .insertMany([{username:username,password:password}]);
-    console.log(user);
+        .insertMany([{username:username,password:password,email:email}]);
+    // console.log(user);
     return user;
 }
-async function checkAvailUser(username){
+async function checkAvailUser(email){
     const user = await client
         .db("B27rwd")
         .collection("login")
-        .findOne({"username":username});
-    console.log(user);
+        .findOne({"email":email});
+    // console.log(user);
     return user;
 
 }
@@ -39,23 +39,23 @@ async function checkQuestionIsAvailable(title){
 
 }
 async function insertQuestion(question){
-   console.log(question)
+//    console.log(question)
     // const {content}=filter;
     let date =new Date();
     let year=date.getFullYear();
     let month=date.getMonth()+1;
     let day=date.getDate();
-    console.log(year,month,day);
+    // console.log(year,month,day);
 const data=[{
     title:question.title,
     body:question.body,
     tags:question.tags,
     askBy:question.askby,
-    date:`${year} ${month} ${day}`,
+    date:`${year},${month} ${day}`,
     answerDetail:[]
     
 }]
-console.log(data)
+// console.log(data)
     const ques = await client
         .db("B27rwd")
         .collection("stackclone")
@@ -88,7 +88,7 @@ async function getAnswer(filter){
 }
 async function inserdata(request){
     // const ques=request;
-    console.log(request)
+    // console.log(request)
     const ques = await client
         .db("B27rwd")
         .collection("question")

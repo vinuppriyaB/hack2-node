@@ -15,9 +15,9 @@ const router= express.Router();
 router
 .route("/signup")
 .post( async(request, response) => {
-    const {username,password}=request.body;
+    const {username,password,email}=request.body;
     
-    const isUserExist= await checkAvailUser(username);
+    const isUserExist= await checkAvailUser(email);
     
     if(isUserExist)
     {
@@ -37,7 +37,7 @@ router
    
     const hashPassword = await genPassword(password);
     
-    const userCreate = await createUser(username,hashPassword)
+    const userCreate = await createUser(username,hashPassword,email)
     
     response.send(userCreate);
    
@@ -45,9 +45,9 @@ router
 
 
   router.route("/login").post( async(request, response) => {
-    const {username,password}=request.body;
+    const {username,password,email}=request.body;
     
-    const userFromDB= await checkAvailUser(username);
+    const userFromDB= await checkAvailUser(email);
     
     if(!userFromDB)
     {
