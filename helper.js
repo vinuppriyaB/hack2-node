@@ -88,11 +88,13 @@ async function getAnswer(filter){
 }
 async function inserdata(request){
     // const ques=request;
-    // console.log(request)
+    let date =new Date();
+    request[0].date=date;
+    
     const ques = await client
         .db("B27rwd")
-        .collection("question")
-        .insertMany([request]);
+        .collection("stackclone")
+        .insertMany(request);
     
     return ques;
 
